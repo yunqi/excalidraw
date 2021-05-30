@@ -63,6 +63,7 @@ export const CLASSES = {
 
 // 1-based in case we ever do `if(element.fontFamily)`
 export const FONT_FAMILY = {
+  0: "chinese",
   1: "Virgil",
   2: "Helvetica",
   3: "Cascadia",
@@ -71,7 +72,7 @@ export const FONT_FAMILY = {
 export const WINDOWS_EMOJI_FALLBACK_FONT = "Segoe UI Emoji";
 
 export const DEFAULT_FONT_SIZE = 20;
-export const DEFAULT_FONT_FAMILY: FontFamily = 1;
+export const DEFAULT_FONT_FAMILY: FontFamily = 0;
 export const DEFAULT_TEXT_ALIGN = "left";
 export const DEFAULT_VERTICAL_ALIGN = "top";
 export const DEFAULT_VERSION = "{version}";

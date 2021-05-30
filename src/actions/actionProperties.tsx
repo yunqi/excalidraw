@@ -24,6 +24,7 @@ import {
   FontSizeMediumIcon,
   FontSizeLargeIcon,
   FontSizeExtraLargeIcon,
+  FontFamilyChineseIcon,
   FontFamilyHandDrawnIcon,
   FontFamilyNormalIcon,
   FontFamilyCodeIcon,
@@ -500,6 +501,11 @@ export const actionChangeFontFamily = register({
   },
   PanelComponent: ({ elements, appState, updateData }) => {
     const options: { value: FontFamily; text: string; icon: JSX.Element }[] = [
+      {
+        value: 0,
+        text: "中文手写字体",
+        icon: <FontFamilyChineseIcon theme={appState.theme} />,
+      },
       {
         value: 1,
         text: t("labels.handDrawn"),
