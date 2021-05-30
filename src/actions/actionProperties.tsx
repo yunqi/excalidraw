@@ -127,9 +127,9 @@ export const actionChangeStrokeColor = register({
           appState.currentItemStrokeColor,
         )}
         onChange={(color) => updateData({ currentItemStrokeColor: color })}
-        isActive={appState.openMenu === "strokeColorPicker"}
+        isActive={appState.openPopup === "strokeColorPicker"}
         setActive={(active) =>
-          updateData({ openMenu: active ? "strokeColorPicker" : null })
+          updateData({ openPopup: active ? "strokeColorPicker" : null })
         }
       />
     </>
@@ -167,9 +167,9 @@ export const actionChangeBackgroundColor = register({
           appState.currentItemBackgroundColor,
         )}
         onChange={(color) => updateData({ currentItemBackgroundColor: color })}
-        isActive={appState.openMenu === "backgroundColorPicker"}
+        isActive={appState.openPopup === "backgroundColorPicker"}
         setActive={(active) =>
-          updateData({ openMenu: active ? "backgroundColorPicker" : null })
+          updateData({ openPopup: active ? "backgroundColorPicker" : null })
         }
       />
     </>
