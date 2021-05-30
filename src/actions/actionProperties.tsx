@@ -503,7 +503,7 @@ export const actionChangeFontFamily = register({
     const options: { value: FontFamily; text: string; icon: JSX.Element }[] = [
       {
         value: 0,
-        text: "中文手写字体",
+        text: "中文手写",
         icon: <FontFamilyChineseIcon theme={appState.theme} />,
       },
       {

@@ -1,5 +1,3 @@
-Excalidraw 支持中文手写字体, [https://excalidraw.mebtte.com](https://excalidraw.mebtte.com)
-
 ![](./.github/assets/chinese.png)
 
 > https://excalidraw.mebtte.com 部署在 Github Pages, 中文字体文件偏大, 如果下载失败, 请使用科学上网.
