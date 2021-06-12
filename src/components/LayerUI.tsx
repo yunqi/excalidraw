@@ -36,7 +36,7 @@ import { Island } from "./Island";
 import "./LayerUI.scss";
 import { LibraryUnit } from "./LibraryUnit";
 import { LoadingMessage } from "./LoadingMessage";
-import { LockIcon } from "./LockIcon";
+import { LockButton } from "./LockButton";
 import { MobileMenu } from "./MobileMenu";
 import { PasteChartDialog } from "./PasteChartDialog";
 import { Section } from "./Section";
@@ -47,6 +47,7 @@ import { Tooltip } from "./Tooltip";
 import { UserList } from "./UserList";
 import Library from "../data/library";
 import { JSONExportDialog } from "./JSONExportDialog";
+import { LibraryButton } from "./LibraryButton";
 
 interface LayerUIProps {
   actionManager: ActionManager;
@@ -107,6 +108,7 @@ const LibraryMenuItems = ({
   onAddToLibrary,
   onInsertShape,
   pendingElements,
+  theme,
   setAppState,
   setLibraryItems,
   libraryReturnUrl,
@@ -119,6 +121,7 @@ const LibraryMenuItems = ({
   onRemoveFromLibrary: (index: number) => void;
   onInsertShape: (elements: LibraryItem) => void;
   onAddToLibrary: (elements: LibraryItem) => void;
+  theme: AppState["theme"];
   setAppState: React.Component<any, AppState>["setState"];
   setLibraryItems: (library: LibraryItems) => void;
   libraryReturnUrl: ExcalidrawProps["libraryReturnUrl"];
@@ -192,7 +195,7 @@ const LibraryMenuItems = ({
       <a
         href={`https://libraries.excalidraw.com?target=${
           window.name || "_blank"
-        }&referrer=${referrer}&useHash=true&token=${id}`}
+        }&referrer=${referrer}&useHash=true&token=${id}&theme=${theme}`}
         target="_excalidraw_libraries"
       >
         {t("labels.libraries")}
@@ -246,6 +249,7 @@ const LibraryMenu = ({
   onInsertShape,
   pendingElements,
   onAddToLibrary,
+  theme,
   setAppState,
   libraryReturnUrl,
   focusContainer,
@@ -256,6 +260,7 @@ const LibraryMenu = ({
   onClickOutside: (event: MouseEvent) => void;
   onInsertShape: (elements: LibraryItem) => void;
   onAddToLibrary: () => void;
+  theme: AppState["theme"];
   setAppState: React.Component<any, AppState>["setState"];
   libraryReturnUrl: ExcalidrawProps["libraryReturnUrl"];
   focusContainer: () => void;
@@ -345,6 +350,7 @@ const LibraryMenu = ({
           libraryReturnUrl={libraryReturnUrl}
           focusContainer={focusContainer}
           library={library}
+          theme={theme}
           id={id}
         />
       )}
@@ -537,6 +543,7 @@ const LayerUI = ({
       libraryReturnUrl={libraryReturnUrl}
       focusContainer={focusContainer}
       library={library}
+      theme={appState.theme}
       id={id}
     />
   ) : null;
@@ -564,6 +571,12 @@ const LayerUI = ({
               {(heading) => (
                 <Stack.Col gap={4} align="start">
                   <Stack.Row gap={1}>
+                    <LockButton
+                      zenModeEnabled={zenModeEnabled}
+                      checked={appState.elementLocked}
+                      onChange={onLockToggle}
+                      title={t("toolBar.lock")}
+                    />
                     <Island
                       padding={1}
                       className={clsx({ "zen-mode": zenModeEnabled })}
@@ -575,15 +588,12 @@ const LayerUI = ({
                           canvas={canvas}
                           elementType={appState.elementType}
                           setAppState={setAppState}
-                          isLibraryOpen={appState.isLibraryOpen}
                         />
                       </Stack.Row>
                     </Island>
-                    <LockIcon
-                      zenModeEnabled={zenModeEnabled}
-                      checked={appState.elementLocked}
-                      onChange={onLockToggle}
-                      title={t("toolBar.lock")}
+                    <LibraryButton
+                      appState={appState}
+                      setAppState={setAppState}
                     />
                   </Stack.Row>
                   {libraryMenu}
