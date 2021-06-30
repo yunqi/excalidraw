@@ -1282,6 +1282,7 @@ class App extends React.Component<AppProps, AppState> {
         this.scene.getElements(),
       ),
     );
+    this.selectShapeTool("selection");
   };
 
   private addTextFromPaste(text: any) {
@@ -1747,7 +1748,8 @@ class App extends React.Component<AppProps, AppState> {
               [element.id]: true,
             },
           }));
-        } else {
+        }
+        if (isDeleted) {
           fixBindingsAfterDeletion(this.scene.getElements(), [element]);
         }
         if (!isDeleted || isExistingElement) {
