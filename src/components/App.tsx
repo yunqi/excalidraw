@@ -156,6 +156,7 @@ import {
   getElementsWithinSelection,
   getNormalizedZoom,
   getSelectedElements,
+  hasBackground,
   isOverScrollBars,
   isSomeElementSelected,
 } from "../scene";
@@ -654,7 +655,11 @@ class App extends React.Component<AppProps, AppState> {
           const fileHandle = launchParams.files[0];
           const blob: Blob = await fileHandle.getFile();
           blob.handle = fileHandle;
-          loadFromBlob(blob, this.state)
+          loadFromBlob(
+            blob,
+            this.state,
+            this.scene.getElementsIncludingDeleted(),
+          )
             .then(({ elements, appState }) =>
               this.syncActionResult({
                 elements,
@@ -692,7 +697,7 @@ class App extends React.Component<AppProps, AppState> {
       };
     }
 
-    const scene = restore(initialData, null);
+    const scene = restore(initialData, null, null);
     scene.appState = {
       ...scene.appState,
       isLoading: false,
@@ -1201,7 +1206,7 @@ class App extends React.Component<AppProps, AppState> {
         });
       } else if (data.elements) {
         this.addElementsFromPasteOrLibrary({
-          elements: restoreElements(data.elements),
+          elements: data.elements,
           position: "cursor",
         });
       } else if (data.text) {
@@ -1216,7 +1221,7 @@ class App extends React.Component<AppProps, AppState> {
     elements: readonly ExcalidrawElement[];
     position: { clientX: number; clientY: number } | "cursor" | "center";
   }) => {
-    const elements = restoreElements(opts.elements);
+    const elements = restoreElements(opts.elements, null);
     const [minX, minY, maxX, maxY] = getCommonBounds(elements);
 
     const elementsCenterX = distance(minX, maxX) / 2;
@@ -1582,17 +1587,22 @@ class App extends React.Component<AppProps, AppState> {
       }
 
       if (event.key === KEYS.G || event.key === KEYS.S) {
-        const selectedElements = getSelectedElements(
-          this.scene.getElements(),
-          this.state,
-        );
-        if (selectedElements.length) {
-          if (event.key === KEYS.G) {
-            this.setState({ openPopup: "backgroundColorPicker" });
-          }
-          if (event.key === KEYS.S) {
-            this.setState({ openPopup: "strokeColorPicker" });
-          }
+        if (this.state.elementType === "selection") {
+          return;
+        }
+
+        if (
+          event.key === KEYS.G &&
+          (hasBackground(this.state.elementType) ||
+            getSelectedElements(
+              this.scene.getElements(),
+              this.state,
+            ).some((element) => hasBackground(element.type)))
+        ) {
+          this.setState({ openPopup: "backgroundColorPicker" });
+        }
+        if (event.key === KEYS.S) {
+          this.setState({ openPopup: "strokeColorPicker" });
         }
       }
     },
@@ -3805,7 +3815,11 @@ class App extends React.Component<AppProps, AppState> {
     try {
       const file = event.dataTransfer.files[0];
       if (file?.type === "image/png" || file?.type === "image/svg+xml") {
-        const { elements, appState } = await loadFromBlob(file, this.state);
+        const { elements, appState } = await loadFromBlob(
+          file,
+          this.state,
+          this.scene.getElementsIncludingDeleted(),
+        );
         this.syncActionResult({
           elements,
           appState: {
@@ -3865,7 +3879,7 @@ class App extends React.Component<AppProps, AppState> {
   };
 
   loadFileToCanvas = (file: Blob) => {
-    loadFromBlob(file, this.state)
+    loadFromBlob(file, this.state, this.scene.getElementsIncludingDeleted())
       .then(({ elements, appState }) =>
         this.syncActionResult({
           elements,
